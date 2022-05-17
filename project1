@@ -1,0 +1,118 @@
+/*
+Cody Walls will be submitting the project for our group
+team members:
+            Deakon Watson (clz.c)
+            Muzhda Wahedi (parity.c)
+            Cody Walls (endian.c, main file)
+*/
+
+
+#include <stdlib.h>
+#include <stdio.h>
+//defines for endian swap
+#define B0 0
+#define B1 1
+#define B2 2
+#define B3 3
+
+//function for endian swap
+//Cody Walls's Part
+int endian(int number){
+    //making a char pointer so i can reference the exact byte placement
+     char *num = (char*)(&number);
+     
+    //swapping bytes 1 and 4
+	num[B0] = num[B0] ^ num[B3];
+	num[B3] = num[B0] ^ num[B3];
+	num[B0] = num[B0] ^ num[B3];
+
+	//swapping bytes 2 and 3
+	num[B1] = num[B1] ^ num[B2];
+	num[B2] = num[B1] ^ num[B2];
+	num[B1] = num[B1] ^ num[B2];	
+		
+	return number;
+}
+//function for parity
+//Muzhda Wahedi's part
+int parity(){
+    unsigned int num;
+    int i; 
+    int count = 0;
+    for (i = 0; i < 32; ++i) {
+        count += num % 2;
+        num /= 2;
+    }
+    return count % 2;
+}
+//function for Count Leading Zeros
+//Deakon Watson's part
+int getBinary(unsigned n){
+	int count=0;
+	for(unsigned i = 1 << 31; i > 0; i = i / 2){
+		if(n & i){
+		break;
+		}
+		else{
+		count++;
+		}
+	}
+	return count;
+}
+
+/*
+
+do
+{
+printf("Enter a 32-bit number (>= 1 and <= 4294967295, inclusively): ");
+scanf("%ld",&n);
+}while(n<1||n>4294967295);
+printf("The number of leading zeroes in %ld is %d",n,getBinary((unsigned)n));
+return 0;
+
+*/
+int main(){
+    int num;
+	int numAfterSwap;
+    int number;
+	int choice;
+	long n;
+while(choice != 4){
+    //switch case for menu system
+    printf("Enter the menu options for the operation to perform:\n");
+    printf("(1) Endian Swap\n");
+    printf("(2) Parity\n");
+    printf("(3) Count Leading Zeros\n");
+    printf("(4) EXIT\n");
+    scanf("%d", &choice);
+	if(choice == 4){
+	printf("Program terminating. Goodbye...\n");
+            _Exit(0);
+
+	}
+    switch(choice){
+        case 1 :
+            printf("Enter a 32-bit number (>= 1 and <= 4294967295) : ");
+	        scanf("%d", &num);
+            numAfterSwap = endian(num);
+            printf("Endian swap of %d gives %d%c", num, numAfterSwap, '\n');
+            break;
+        case 2 :
+            printf("Enter a 32-bit number (>= 1 and <= 4294967295, inclusively): ");
+            scanf("%d", &number);
+            printf("Parity of %d is %d\n", number, parity());
+            break;
+        case 3 :
+		do{
+		printf("Enter a 32-bit number (>= 1 and <= 4294967295, inclusively): ");
+			scanf("%ld",&n);
+		}while(n<1||n>4294967295);
+		printf("The number of leading zeroes in %ld is %d\n",n,getBinary((unsigned)n));
+            break;
+	default:
+            break;
+    }
+}
+
+    return 0;
+}
